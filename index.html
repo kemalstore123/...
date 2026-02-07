@@ -2,54 +2,76 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Scan QR Siswa</title>
+    <title>Absensi QR</title>
     <script src="https://unpkg.com/html5-qrcode"></script>
     <style>
         body {
             font-family: Arial;
             text-align: center;
-            margin-top: 20px;
         }
         #reader {
             width: 300px;
             margin: auto;
         }
-        .hasil {
-            margin-top: 20px;
-            font-size: 18px;
+        table {
+            margin: auto;
+            border-collapse: collapse;
+            width: 70%;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 8px;
+        }
+        th {
+            background: #eee;
         }
     </style>
 </head>
 <body>
 
-<h2>Scan QR Code</h2>
+<h2>ABSENSI SISWA</h2>
 
 <div id="reader"></div>
 
-<div class="hasil" id="hasil">
-    <p>Silakan scan QR...</p>
-</div>
+<br>
+
+<table>
+    <thead>
+        <tr>
+            <th>No</th>
+            <th>Nama</th>
+            <th>Kelas</th>
+            <th>Kehadiran</th>
+        </tr>
+    </thead>
+    <tbody id="tabel"></tbody>
+</table>
 
 <script>
-    function onScanSuccess(text) {
-        try {
-            const data = JSON.parse(text);
+let no = 1;
 
-            document.getElementById("hasil").innerHTML = `
-                <p><b>Nama:</b> ${data.nama}</p>
-                <p><b>Kelas:</b> ${data.kelas}</p>
-            `;
-        } catch (err) {
-            document.getElementById("hasil").innerHTML =
-                "<p>QR Code tidak berisi data siswa</p>";
-        }
+function onScanSuccess(text) {
+    try {
+        const data = JSON.parse(text);
+
+        document.getElementById("tabel").innerHTML += `
+            <tr>
+                <td>${no++}</td>
+                <td>${data.nama}</td>
+                <td>${data.kelas}</td>
+                <td>Hadir</td>
+            </tr>
+        `;
+    } catch {
+        alert("QR Code tidak valid");
     }
+}
 
-    new Html5Qrcode("reader").start(
-        { facingMode: "environment" },
-        { fps: 10, qrbox: 250 },
-        onScanSuccess
-    );
+new Html5Qrcode("reader").start(
+    { facingMode: "environment" },
+    { fps: 10, qrbox: 250 },
+    onScanSuccess
+);
 </script>
 
 </body>
