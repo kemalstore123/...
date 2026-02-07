@@ -32,7 +32,6 @@
 <h2>ABSENSI SISWA</h2>
 
 <div id="reader"></div>
-
 <br>
 
 <table>
@@ -49,11 +48,29 @@
 
 <script>
 let no = 1;
+let daftarHadir = []; // penyimpan data yang sudah absen
 
 function onScanSuccess(text) {
     try {
         const data = JSON.parse(text);
 
+        // cek apakah sudah absen
+        const sudahAda = daftarHadir.some(
+            s => s.nama === data.nama && s.kelas === data.kelas
+        );
+
+        if (sudahAda) {
+            alert("⚠️ Siswa ini sudah melakukan absensi!");
+            return;
+        }
+
+        // simpan ke daftar hadir
+        daftarHadir.push({
+            nama: data.nama,
+            kelas: data.kelas
+        });
+
+        // tampilkan ke tabel
         document.getElementById("tabel").innerHTML += `
             <tr>
                 <td>${no++}</td>
@@ -76,3 +93,4 @@ new Html5Qrcode("reader").start(
 
 </body>
 </html>
+
