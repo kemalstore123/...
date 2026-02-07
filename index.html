@@ -16,7 +16,7 @@
         table {
             margin: auto;
             border-collapse: collapse;
-            width: 70%;
+            width: 80%;
         }
         th, td {
             border: 1px solid black;
@@ -40,6 +40,7 @@
             <th>No</th>
             <th>Nama</th>
             <th>Kelas</th>
+            <th>Jam Hadir</th>
             <th>Kehadiran</th>
         </tr>
     </thead>
@@ -48,34 +49,40 @@
 
 <script>
 let no = 1;
-let daftarHadir = []; // penyimpan data yang sudah absen
+let daftarHadir = [];
+
+function getJam() {
+    const now = new Date();
+    return now.toLocaleTimeString("id-ID");
+}
 
 function onScanSuccess(text) {
     try {
         const data = JSON.parse(text);
 
-        // cek apakah sudah absen
+        // Cek scan dobel
         const sudahAda = daftarHadir.some(
             s => s.nama === data.nama && s.kelas === data.kelas
         );
 
         if (sudahAda) {
-            alert("⚠️ Siswa ini sudah melakukan absensi!");
+            alert("⚠️ Siswa ini sudah absen!");
             return;
         }
 
-        // simpan ke daftar hadir
+        const jamHadir = getJam();
+
         daftarHadir.push({
             nama: data.nama,
             kelas: data.kelas
         });
 
-        // tampilkan ke tabel
         document.getElementById("tabel").innerHTML += `
             <tr>
                 <td>${no++}</td>
                 <td>${data.nama}</td>
                 <td>${data.kelas}</td>
+                <td>${jamHadir}</td>
                 <td>Hadir</td>
             </tr>
         `;
@@ -93,4 +100,3 @@ new Html5Qrcode("reader").start(
 
 </body>
 </html>
-
